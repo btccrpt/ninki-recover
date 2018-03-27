@@ -1,4 +1,4 @@
-﻿var api_key = '3b8c4b3c313fc6ba0e69792b0154cc88';
+var api_key = '3b8c4b3c313fc6ba0e69792b0154cc88';
 var addr = '';
 
 var addresses = [];
@@ -180,7 +180,7 @@ $(document).ready(function () {
         var tx = GetTransactionData(outputsToSpend, pathsToSpend, publicKeys, amountsToSend, addressToSend, privKeys);
 
 
-        var url = 'https://api.chain.com/v1/bitcoin/transactions?api-key-id=' + api_key;
+        var url = 'https://chain.so/api/v2/send_tx/BTC/' + tx;
         $.ajax({
             url: url,
             type: 'POST',
@@ -224,7 +224,7 @@ $(document).ready(function () {
 
 
             jQuery.ajax({
-                url: "https://api.chain.com/v1/bitcoin/addresses/" + address,
+                url: " https://chain.so/api/v2/get_address_balance/BTC/" + address,
                 type: 'GET',
                 success: function (data) {
 
@@ -306,7 +306,7 @@ $(document).ready(function () {
             $("#progmess").html("Checking node " + path);
 
             jQuery.ajax({
-                url: "https://api.chain.com/v1/bitcoin/addresses/" + address,
+                url: " https://chain.so/api/v2/get_address_balance/BTC/" + address,
                 type: 'GET',
                 success: function (data) {
 
@@ -401,7 +401,7 @@ $(document).ready(function () {
                         for (var i = 0; i < addresses.length; i++) {
 
                             jQuery.ajax({
-                                url: "https://api.chain.com/v1/bitcoin/addresses/" + addresses[i] + "/unspents",
+                                url: "  https://chain.so/api/v2/get_tx_unspent/BTC" + addresses[i],
                                 type: 'GET',
                                 success: function (data) {
                                     if (data.length > 0) {
