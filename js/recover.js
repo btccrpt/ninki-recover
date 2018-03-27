@@ -17,7 +17,7 @@ var publicKeys = [];
 var privKeys = [];
 var pathsToSpend = [];
 
-var timeout = 100;
+var timeout = 200;
 $(document).ready(function () {
 
 
@@ -179,7 +179,8 @@ $(document).ready(function () {
         addressToSend.push($("#txtAddress").val());
 
         var tx = GetTransactionData(outputsToSpend, pathsToSpend, publicKeys, amountsToSend, addressToSend, privKeys);
-
+        $("#sendresults").html("Broadicasting raw tx: " + tx + " ");
+        console.log({rawtx: tx})
 
         var url = 'https://blockexplorer.com/api/tx/send';
         $.ajax({
