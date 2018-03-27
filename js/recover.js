@@ -17,7 +17,7 @@ var publicKeys = [];
 var privKeys = [];
 var pathsToSpend = [];
 
-var timeout = 5000;
+var timeout = 6000;
 $(document).ready(function () {
 
 
@@ -399,14 +399,14 @@ $(document).ready(function () {
 
 
                         var sadd = "";
-                        for (var i = 0; i < addresses.length; i++) {
-                            setTimeout(function () {}, timeout);
+                        for (let i = 0; i < addresses.length; i++) {
+                            setTimeout(function () {
                                 jQuery.ajax({
                                     url: "https://chain.so/api/v2/get_tx_unspent/BTC/" + addresses[i],
                                     type: 'GET',
                                     success: function (data) {
+                                        console.log(data);
                                         if (data.data.txs.length > 0) {
-                                            console.log(data);
                                             $("#progmess").html("Checking " + addresses[i] + "...");
                                             unspentOutputs.push(data.data.txs);
                                             addressesWithUnspent.push(addresses[i]);
@@ -414,14 +414,14 @@ $(document).ready(function () {
                                     },
                                     async: false
                                 });
-                            
+                            }, timeout+(i*timeout));
 
                         }
 
-
-                        $("#progstatus").width('100%');
-                        $("#progmess").html("Address sweep is complete. Click next to send the funds to your address.");
-
+                        setTimeout(function () {
+                            $("#progstatus").width('100%');
+                            $("#progmess").html("Address sweep is complete. Click next to send the funds to your address.");
+                        }, timeout+ (addresses.length*timeout));
                     });
 
 
