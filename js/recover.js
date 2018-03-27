@@ -17,7 +17,7 @@ var publicKeys = [];
 var privKeys = [];
 var pathsToSpend = [];
 
-var timeout = 6000;
+var timeout = 5000;
 $(document).ready(function () {
 
 
@@ -260,7 +260,7 @@ $(document).ready(function () {
 
             nodeCounter++;
 
-            if (nodeCounter <= 10) {
+            if (nodeCounter <= 20) {
                 scanNode(noderoot, callback);
             } else {
 
