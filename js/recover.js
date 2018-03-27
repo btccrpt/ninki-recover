@@ -234,8 +234,8 @@ $(document).ready(function () {
 
                     if (data.status == 'success') {
 
-                        balance += (data.data.confirmed_balance * 1);
-                        cbalance += (data.data.confirmed_balance * 1);
+                        balance += (data.data.confirmed_balance * 100000000);
+                        cbalance += (data.data.confirmed_balance * 100000000);
                         addresses.push(address);
                         dustcheck[address] = data.data.confirmed_balance;
 
