@@ -17,7 +17,7 @@ var publicKeys = [];
 var privKeys = [];
 var pathsToSpend = [];
 
-var timeout = 6000;
+var timeout = 100;
 $(document).ready(function () {
 
 
@@ -138,7 +138,7 @@ $(document).ready(function () {
 
                 //if (obj[k].value > 0) {
                 var h = obj[k].txid;
-                var outind = obj[k].output_no;
+                var outind = obj[k].vout;
 
                 var addr = addressesWithUnspent[i]
 
@@ -181,21 +181,19 @@ $(document).ready(function () {
         var tx = GetTransactionData(outputsToSpend, pathsToSpend, publicKeys, amountsToSend, addressToSend, privKeys);
 
 
-        var url = 'https://chain.so/api/v2/send_tx/BTC';
+        var url = 'https://blockexplorer.com/api/tx/send';
         $.ajax({
             url: url,
             type: 'POST',
             dataType: 'json',
-            data: JSON.stringify({
-                tx_hex: tx
-            }),
+            data: {rawtx: tx},
             success: function (data) {
-                $("#sendresults").html("Transaction Id: " + data.data.txid);
+                $("#sendresults").html("Transaction Id: " + data.txid);
                 console.log(data);
             },
             error: function (data) {
-                $("#sendresults").html(data.responseJSON.message);
-                //console.log(data);
+                $("#sendresults").html(data);
+                console.log(data);
             }
         });
 
@@ -225,19 +223,19 @@ $(document).ready(function () {
 
 
             jQuery.ajax({
-                url: "https://chain.so/api/v2/get_address_balance/BTC/" + address,
+                url: "https://blockexplorer.com/api/addr/" + address,
                 type: 'GET',
                 success: function (data) {
 
                     console.log(data);
 
 
-                    if (data.status == 'success') {
+                    if (data.addrStr==address) {
 
-                        balance += (data.data.confirmed_balance * 100000000);
-                        cbalance += (data.data.confirmed_balance * 100000000);
+                        balance += (data.balanceSat * 1);
+                        cbalance += (data.balanceSat * 1);
                         addresses.push(address);
-                        dustcheck[address] = data.data.confirmed_balance;
+                        dustcheck[address] = data.balanceSat;
 
                         //nodes.push('m/0/0/');
 
@@ -307,13 +305,13 @@ $(document).ready(function () {
             $("#progmess").html("Checking node " + path);
 
             jQuery.ajax({
-                url: "https://chain.so/api/v2/get_address_balance/BTC/" + address,
+                url: "https://blockexplorer.com/api/addr/" + address,
                 type: 'GET',
                 success: function (data) {
 
                     console.log(data);
 
-                    if (data.status=='success') {
+                    if (data.addrStr==address) {
 
                         activeFriendNodes.push(path);
                     }
@@ -400,28 +398,29 @@ $(document).ready(function () {
 
                         var sadd = "";
                         for (let i = 0; i < addresses.length; i++) {
-                            setTimeout(function () {
-                                jQuery.ajax({
-                                    url: "https://chain.so/api/v2/get_tx_unspent/BTC/" + addresses[i],
-                                    type: 'GET',
-                                    success: function (data) {
-                                        console.log(data);
-                                        if (data.data.txs.length > 0) {
-                                            $("#progmess").html("Checking " + addresses[i] + "...");
-                                            unspentOutputs.push(data.data.txs);
-                                            addressesWithUnspent.push(addresses[i]);
-                                        }
-                                    },
-                                    async: false
-                                });
-                            }, timeout+(i*timeout));
+
+                            jQuery.ajax({
+                                url: "https://blockexplorer.com/api/addr/" + addresses[i] + "/utxo",
+                                type: 'GET',
+                                success: function (data) {
+                                    console.log(data);
+                                    if (data.length > 0) {
+                                        $("#progmess").html("Checking " + addresses[i] + "...");
+                                        unspentOutputs.push(data);
+                                        addressesWithUnspent.push(addresses[i]);
+                                    }
+                                },
+                                async: false
+                            });
 
                         }
+
 
                         setTimeout(function () {
                             $("#progstatus").width('100%');
                             $("#progmess").html("Address sweep is complete. Click next to send the funds to your address.");
                         }, timeout+ (addresses.length*timeout));
+
                     });
 
 
