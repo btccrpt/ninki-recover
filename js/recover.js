@@ -226,9 +226,6 @@ $(document).ready(function () {
             jQuery.ajax({
                 url: "https://api.chain.com/v1/bitcoin/addresses/" + address,
                 type: 'GET',
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', 'Basic ' + btoa(api_key));
-                },
                 success: function (data) {
 
                     console.log(data);
@@ -270,7 +267,7 @@ $(document).ready(function () {
                 knodeCounter = 0;
                 callback();
             }
-        }, 50);
+        }, 2000);
     }
 
 
@@ -311,9 +308,6 @@ $(document).ready(function () {
             jQuery.ajax({
                 url: "https://api.chain.com/v1/bitcoin/addresses/" + address,
                 type: 'GET',
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', 'Basic ' + btoa(api_key));
-                },
                 success: function (data) {
 
                     console.log(data);
@@ -333,7 +327,7 @@ $(document).ready(function () {
             } else {
                 callback();
             }
-        }, 50);
+        }, 2000);
     }
 
 
@@ -409,9 +403,6 @@ $(document).ready(function () {
                             jQuery.ajax({
                                 url: "https://api.chain.com/v1/bitcoin/addresses/" + addresses[i] + "/unspents",
                                 type: 'GET',
-                                beforeSend: function (xhr) {
-                                    xhr.setRequestHeader('Authorization', 'Basic ' + btoa(api_key));
-                                },
                                 success: function (data) {
                                     if (data.length > 0) {
                                         console.log(data);
