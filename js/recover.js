@@ -181,16 +181,16 @@ $(document).ready(function () {
         var tx = GetTransactionData(outputsToSpend, pathsToSpend, publicKeys, amountsToSend, addressToSend, privKeys);
 
 
-        var url = 'https://chain.so/api/v2/send_tx/BTC/' + tx;
+        var url = 'https://chain.so/api/v2/send_tx/BTC';
         $.ajax({
             url: url,
             type: 'POST',
             dataType: 'json',
             data: JSON.stringify({
-                hex: tx
+                tx_hex: tx
             }),
             success: function (data) {
-                $("#sendresults").html("Transaction Id: " + data.data.transaction_hash);
+                $("#sendresults").html("Transaction Id: " + data.data.txid);
                 console.log(data);
             },
             error: function (data) {
