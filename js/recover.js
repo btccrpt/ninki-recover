@@ -17,6 +17,7 @@ var publicKeys = [];
 var privKeys = [];
 var pathsToSpend = [];
 
+var timeout = 6000;
 $(document).ready(function () {
 
 
@@ -136,8 +137,8 @@ $(document).ready(function () {
             for (var k = 0; k < obj.length; k++) {
 
                 //if (obj[k].value > 0) {
-                var h = obj[k].transaction_hash;
-                var outind = obj[k].output_index;
+                var h = obj[k].txid;
+                var outind = obj[k].output_no;
 
                 var addr = addressesWithUnspent[i]
 
@@ -189,7 +190,7 @@ $(document).ready(function () {
                 hex: tx
             }),
             success: function (data) {
-                $("#sendresults").html("Transaction Id: " + data.transaction_hash);
+                $("#sendresults").html("Transaction Id: " + data.data.transaction_hash);
                 console.log(data);
             },
             error: function (data) {
@@ -224,19 +225,19 @@ $(document).ready(function () {
 
 
             jQuery.ajax({
-                url: " https://chain.so/api/v2/get_address_balance/BTC/" + address,
+                url: "https://chain.so/api/v2/get_address_balance/BTC/" + address,
                 type: 'GET',
                 success: function (data) {
 
                     console.log(data);
 
 
-                    if (data.received > 0) {
+                    if (data.status == 'success') {
 
-                        balance += (data.balance * 1);
-                        cbalance += (data.balance * 1);
+                        balance += (data.data.confirmed_balance * 1);
+                        cbalance += (data.data.confirmed_balance * 1);
                         addresses.push(address);
-                        dustcheck[address] = data.balance;
+                        dustcheck[address] = data.data.confirmed_balance;
 
                         //nodes.push('m/0/0/');
 
@@ -259,7 +260,7 @@ $(document).ready(function () {
 
             nodeCounter++;
 
-            if (nodeCounter <= 50000) {
+            if (nodeCounter <= 10) {
                 scanNode(noderoot, callback);
             } else {
 
@@ -267,7 +268,7 @@ $(document).ready(function () {
                 knodeCounter = 0;
                 callback();
             }
-        }, 2000);
+        }, timeout);
     }
 
 
@@ -306,13 +307,13 @@ $(document).ready(function () {
             $("#progmess").html("Checking node " + path);
 
             jQuery.ajax({
-                url: " https://chain.so/api/v2/get_address_balance/BTC/" + address,
+                url: "https://chain.so/api/v2/get_address_balance/BTC/" + address,
                 type: 'GET',
                 success: function (data) {
 
                     console.log(data);
 
-                    if (data.received > 0) {
+                    if (data.status=='success') {
 
                         activeFriendNodes.push(path);
                     }
@@ -327,7 +328,7 @@ $(document).ready(function () {
             } else {
                 callback();
             }
-        }, 2000);
+        }, timeout);
     }
 
 
@@ -399,20 +400,21 @@ $(document).ready(function () {
 
                         var sadd = "";
                         for (var i = 0; i < addresses.length; i++) {
-
-                            jQuery.ajax({
-                                url: "  https://chain.so/api/v2/get_tx_unspent/BTC" + addresses[i],
-                                type: 'GET',
-                                success: function (data) {
-                                    if (data.length > 0) {
-                                        console.log(data);
-                                        $("#progmess").html("Checking " + addresses[i] + "...");
-                                        unspentOutputs.push(data);
-                                        addressesWithUnspent.push(addresses[i]);
-                                    }
-                                },
-                                async: false
-                            });
+                            setTimeout(function () {
+                                jQuery.ajax({
+                                    url: "https://chain.so/api/v2/get_tx_unspent/BTC/" + addresses[i],
+                                    type: 'GET',
+                                    success: function (data) {
+                                        if (data.data.txs.length > 0) {
+                                            console.log(data);
+                                            $("#progmess").html("Checking " + addresses[i] + "...");
+                                            unspentOutputs.push(data.data.txs);
+                                            addressesWithUnspent.push(addresses[i]);
+                                        }
+                                    },
+                                    async: false
+                                });
+                            }, timeout);
 
                         }
 
