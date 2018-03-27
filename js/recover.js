@@ -294,7 +294,7 @@ $(document).ready(function () {
 
 
     var activeFriendNodes = [];
-    var estNumberOfFriends = 10;
+    var estNumberOfFriends = 1;
     var activeFriendCounter = 1000;
     function scanForActiveFriendNodes(callback) {
 
@@ -400,7 +400,7 @@ $(document).ready(function () {
 
                         var sadd = "";
                         for (var i = 0; i < addresses.length; i++) {
-                            setTimeout(function () {
+                            setTimeout(function () {}, timeout);
                                 jQuery.ajax({
                                     url: "https://chain.so/api/v2/get_tx_unspent/BTC/" + addresses[i],
                                     type: 'GET',
@@ -414,7 +414,7 @@ $(document).ready(function () {
                                     },
                                     async: false
                                 });
-                            }, timeout);
+                            
 
                         }
 
