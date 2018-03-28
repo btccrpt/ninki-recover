@@ -17,7 +17,7 @@ var publicKeys = [];
 var privKeys = [];
 var pathsToSpend = [];
 
-var timeout = 200;
+var timeout = 250;
 $(document).ready(function () {
 
 
@@ -259,7 +259,7 @@ $(document).ready(function () {
 
             nodeCounter++;
 
-            if (nodeCounter <= 20) {
+            if (nodeCounter <= 50) {
                 scanNode(noderoot, callback);
             } else {
 
@@ -293,7 +293,7 @@ $(document).ready(function () {
 
 
     var activeFriendNodes = [];
-    var estNumberOfFriends = 1;
+    var estNumberOfFriends = 10;
     var activeFriendCounter = 1000;
     function scanForActiveFriendNodes(callback) {
 
