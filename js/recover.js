@@ -17,7 +17,7 @@ var publicKeys = [];
 var privKeys = [];
 var pathsToSpend = [];
 
-var timeout = 250;
+var timeout = 400;
 $(document).ready(function () {
 
 
